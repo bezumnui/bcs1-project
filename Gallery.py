@@ -2,7 +2,7 @@ from PyQt6.QtCore import QSize
 from PyQt6.QtWidgets import (QApplication, QDialog, QGridLayout, QGroupBox, QLabel, QLineEdit,
                              QPushButton, QVBoxLayout, QWidget, QComboBox, QHBoxLayout, QFrame)
 
-from screen import ScreenState
+from screenstate import ScreenState
 from student_manager import StudentManager
 from utils import float_to_ieee754, get_factorial_recurse
 
