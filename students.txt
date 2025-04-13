@@ -1,0 +1,2 @@
+George Viznyuk;2023;10.00,24.50,3.50
+Heorhii Vizniuk;2024;1.23,24.50,3.50
