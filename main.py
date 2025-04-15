@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QApplication
 
-from Gallery import WidgetGallery
+from gallery import WidgetGallery
 
 if __name__ == '__main__':
     app = QApplication([])

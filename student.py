@@ -10,6 +10,10 @@ class Student:
     id: int
     grades: list[float]
 
+
+    def set_name(self, name: str):
+        self.name = name
+
     def serialize(self):
         result = f"{self.name};{self.id};"
         for i in range(len(self.grades)):

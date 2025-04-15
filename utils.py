@@ -36,3 +36,17 @@ def get_factorial_recurse(number: int) -> int:
     if number == 0:
         return 1
     return number * get_factorial_recurse(number - 1)
+
+def is_float(raw_single: str):
+    if len(raw_single) > 0 and raw_single[0]:
+        raw_single = raw_single[1:]
+
+    dot_separated = False
+    for char in raw_single:
+        if not char.isdigit():
+            if not dot_separated and char == ".":
+                dot_separated = True
+                continue
+            return False
+
+    return True
