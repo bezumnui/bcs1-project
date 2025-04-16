@@ -1,6 +1,5 @@
 from PyQt6.QtWidgets import (QDialog, QGridLayout, QVBoxLayout, QComboBox, QFrame)
 
-from screenstate import ScreenState
 from sub_applications.bin_hex_octal_converter import BinHexOctalConverterApplication
 from sub_applications.factorial_application import FactorialApplication
 from sub_applications.ieee_754_converter_application import IEEE754ConverterApplication

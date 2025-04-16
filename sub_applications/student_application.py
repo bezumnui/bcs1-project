@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QWidget, QLineEdit, QGridLayout, QPushButton, QCompl
     QHBoxLayout, QSizePolicy, QListView, QAbstractItemView, QStyle
 
 from linked_array import LinkedArray
-from students_serializer import StudentSerializer, Student
+from student import StudentSerializer, Student
 from sub_applications.add_new_student import AddNewStudentWindow
 from sub_applications.student_provider import StudentsProvider
 from sub_applications.sub_application import SubApplication

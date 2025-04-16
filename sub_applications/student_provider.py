@@ -2,7 +2,7 @@ import abc
 from abc import abstractmethod
 
 from linked_array import LinkedArray
-from students_serializer import Student
+from student import Student
 
 
 class StudentsProvider(abc.ABC):

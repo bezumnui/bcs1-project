@@ -1,8 +1,7 @@
 from PyQt6.QtCore import QSize
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QHBoxLayout, QGridLayout
 
-from linked_array import LinkedArray
-from students_serializer import Student
+from student import Student
 from sub_applications.student_provider import StudentsProvider
 
 
@@ -29,7 +28,6 @@ class AddNewStudentWindow(QWidget):
         self.setFixedSize(QSize(300, 100))
         self.setLayout(self.layout)
         self.setWindowTitle("Add New Student")
-
 
     def button_clicked(self):
         student_name = self.student_name.text()
