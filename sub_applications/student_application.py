@@ -1,6 +1,6 @@
 from PyQt6.QtCore import Qt, QStringListModel, QModelIndex
 from PyQt6.QtWidgets import QWidget, QLineEdit, QGridLayout, QPushButton, QCompleter, QLabel, QVBoxLayout, \
-    QHBoxLayout, QSizePolicy, QListView, QAbstractItemView, QStyle
+    QHBoxLayout, QSizePolicy, QListView, QAbstractItemView, QStyle, QComboBox
 
 from linked_array import LinkedArray
 from student import StudentSerializer, Student
@@ -145,6 +145,16 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
         search_layout.addWidget(self.search_text_input, 2, 0)
         search_layout.addWidget(self.search_button, 3, 0)
 
+        self.sort_dropmenu = QComboBox()
+        self.sort_dropmenu.addItems([
+            "Sort Alphabetically",
+            "Sort by Grade Average (Descending)",
+            "Sort by Grade Average (Ascending)"])
+        self.sort_dropmenu.setCurrentIndex(0)
+        self.sort_dropmenu.currentIndexChanged.connect(self.sort_option)
+
+        search_layout.addWidget(self.sort_dropmenu, 4 , 0)
+        
         # self.setLayout(search_layout)
         self.search_widget.setLayout(search_layout)
 
@@ -166,6 +176,31 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
         self.search_text_completer.update(filtered)
         self.search_menu_model.setStringList(filtered)
 
+    def sort_by_average(self):
+        student_list = self.students.to_list()
+        selection_sort_avg(student_list)
+        return student_list
+
+    def sort_option(self, opt):
+        student_list = self.students.to_list()
+
+        if opt == 0:
+            student_list.sort(key= lambda s: s.name.lower())
+            # sort alphabetically
+        elif opt == 1:
+            student_list = self.sort_by_average()
+            # average grade descending
+        elif opt == 2:
+            student_list = self.sort_by_average()
+            student_list.reverse()
+            # average grade ascending
+        
+        self.students.clear()
+        for i in student_list:
+            self.students.append(i)
+        
+        self.search_input_callback("")
+    
     def menu_item_clicked_callback(self, item: QModelIndex):
         self.search_text_input.setText(item.data())
         self.search_input_callback(item.data())
@@ -312,3 +347,26 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
 
         self.current_student.grades.pop(grades_size - 1)
         self.display_grades[grades_size - 1].hide()
+
+# selection sorting function, based on average grade and alphabetical order.
+
+def selection_sort_avg(student_list):
+    list_size = len(student_list)
+    
+    for i in range(list_size):
+        max_avg = i
+
+        for m in range(i+1, list_size):
+            current_avg = student_list[max_avg].average_grade()
+            compared_avg = student_list[m].average_grade()
+
+            if compared_avg > current_avg:
+                max_avg = m
+            
+            elif current_avg == compared_avg:
+                if student_list[m].name > student_list[max_avg].name:
+                    max_avg = m
+        
+        student_list[i], student_list[max_avg] = student_list[max_avg], student_list[i]
+    
+    return student_list
