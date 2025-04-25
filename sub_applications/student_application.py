@@ -10,6 +10,10 @@ from sub_applications.sub_application import SubApplication
 from utils import is_float
 
 
+SORT_ALPHABETIC_LABEL = "Sort Alphabetically"
+SORT_AVERAGE_DESCEND_LABEL = "Sort by Grade Average (Descending)"
+SORT_AVERAGE_ASCEND_LABEL = "Sort by Grade Average (Ascending)"
+
 class StudentsCompleter(QCompleter):
     def __init__(self, parent=None):
         super().__init__([], parent)
@@ -43,6 +47,13 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
 
     def __init__(self):
         super().__init__()
+
+        self.sort_modes = {
+            SORT_ALPHABETIC_LABEL : "alphabetic",
+            SORT_AVERAGE_DESCEND_LABEL : "average_high_low",
+            SORT_AVERAGE_ASCEND_LABEL : "average_low_high"
+            }
+        
         self.manager_layout = QGridLayout()
         self.max_grades = 10
         self.current_student: Student | None = None
@@ -146,12 +157,9 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
         search_layout.addWidget(self.search_button, 3, 0)
 
         self.sort_dropmenu = QComboBox()
-        self.sort_dropmenu.addItems([
-            "Sort Alphabetically",
-            "Sort by Grade Average (Descending)",
-            "Sort by Grade Average (Ascending)"])
+        self.sort_dropmenu.addItems(self.sort_modes.keys())
         self.sort_dropmenu.setCurrentIndex(0)
-        self.sort_dropmenu.currentIndexChanged.connect(self.sort_option)
+        self.sort_dropmenu.textActivated.connect(self.sort_with_label)
 
         search_layout.addWidget(self.sort_dropmenu, 4 , 0)
         
@@ -178,26 +186,26 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
 
     def sort_by_average(self):
         student_list = self.students.to_list()
-        selection_sort_avg(student_list)
+        selection_sort_average(student_list)
         return student_list
-
-    def sort_option(self, opt):
+    
+    def sort_with_label(self, label: str):
+        sort_mode = self.sort_modes.get(label, self.sort_modes[SORT_ALPHABETIC_LABEL])
         student_list = self.students.to_list()
 
-        if opt == 0:
+        if sort_mode == "alphabetic":
             student_list.sort(key= lambda s: s.name.lower())
-            # sort alphabetically
-        elif opt == 1:
+        
+        elif sort_mode == "average_high_low":
             student_list = self.sort_by_average()
-            # average grade descending
-        elif opt == 2:
+        
+        elif sort_mode == "average_low_high":
             student_list = self.sort_by_average()
             student_list.reverse()
-            # average grade ascending
         
         self.students.clear()
-        for i in student_list:
-            self.students.append(i)
+        for student in student_list:
+            self.students.append(student)
         
         self.search_input_callback("")
     
@@ -348,9 +356,8 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
         self.current_student.grades.pop(grades_size - 1)
         self.display_grades[grades_size - 1].hide()
 
-# selection sorting function, based on average grade and alphabetical order.
 
-def selection_sort_avg(student_list):
+def selection_sort_average(student_list):
     list_size = len(student_list)
     
     for i in range(list_size):
@@ -370,3 +377,4 @@ def selection_sort_avg(student_list):
         student_list[i], student_list[max_avg] = student_list[max_avg], student_list[i]
     
     return student_list
+    
