@@ -38,7 +38,7 @@ def get_factorial_recurse(number: int) -> int:
     return number * get_factorial_recurse(number - 1)
 
 def is_float(raw_single: str):
-    if len(raw_single) > 0 and raw_single[0]:
+    if len(raw_single) > 0 and raw_single[0] == '-':
         raw_single = raw_single[1:]
 
     dot_separated = False
