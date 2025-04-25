@@ -10,10 +10,6 @@ from sub_applications.sub_application import SubApplication
 from utils import is_float
 
 
-SORT_ALPHABETIC_LABEL = "Sort Alphabetically"
-SORT_AVERAGE_DESCEND_LABEL = "Sort by Grade Average (Descending)"
-SORT_AVERAGE_ASCEND_LABEL = "Sort by Grade Average (Ascending)"
-
 class StudentsCompleter(QCompleter):
     def __init__(self, parent=None):
         super().__init__([], parent)
@@ -29,7 +25,14 @@ class StudentsCompleter(QCompleter):
         self.__model.setStringList(students_names[:self.max_filter])
 
 
+class SortMode:
+    ALPHABETIC = "Sort Alphabetically"
+    AVERAGE_HIGH_LOW = "Sort by Grade Average (Descending)"
+    AVERAGE_LOW_HIGH = "Sort by Grade Average (Ascending)"
+
+
 class StudentManagerApplication(SubApplication, StudentsProvider):
+
     def get_students(self) -> LinkedArray[Student]:
         return self.students
 
@@ -48,12 +51,12 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
     def __init__(self):
         super().__init__()
 
-        self.sort_modes = {
-            SORT_ALPHABETIC_LABEL : "alphabetic",
-            SORT_AVERAGE_DESCEND_LABEL : "average_high_low",
-            SORT_AVERAGE_ASCEND_LABEL : "average_low_high"
-            }
-        
+        self.sort_modes = [
+            SortMode.ALPHABETIC,
+            SortMode.AVERAGE_HIGH_LOW,
+            SortMode.AVERAGE_LOW_HIGH
+        ]
+
         self.manager_layout = QGridLayout()
         self.max_grades = 10
         self.current_student: Student | None = None
@@ -157,12 +160,12 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
         search_layout.addWidget(self.search_button, 3, 0)
 
         self.sort_dropmenu = QComboBox()
-        self.sort_dropmenu.addItems(self.sort_modes.keys())
+        self.sort_dropmenu.addItems(self.sort_modes)
         self.sort_dropmenu.setCurrentIndex(0)
-        self.sort_dropmenu.textActivated.connect(self.sort_with_label)
+        self.sort_dropmenu.textActivated.connect(self.sort_with_mode)
 
-        search_layout.addWidget(self.sort_dropmenu, 4 , 0)
-        
+        search_layout.addWidget(self.sort_dropmenu, 4, 0)
+
         # self.setLayout(search_layout)
         self.search_widget.setLayout(search_layout)
 
@@ -188,27 +191,30 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
         student_list = self.students.to_list()
         selection_sort_average(student_list)
         return student_list
-    
-    def sort_with_label(self, label: str):
-        sort_mode = self.sort_modes.get(label, self.sort_modes[SORT_ALPHABETIC_LABEL])
-        student_list = self.students.to_list()
 
-        if sort_mode == "alphabetic":
-            student_list.sort(key= lambda s: s.name.lower())
-        
-        elif sort_mode == "average_high_low":
+    def sort_with_mode(self, mode: str):
+
+        if mode == SortMode.ALPHABETIC:
+            student_list = self.students.to_list()
+            student_list.sort(key=lambda s: s.name.lower())
+
+        elif mode == SortMode.AVERAGE_HIGH_LOW:
             student_list = self.sort_by_average()
-        
-        elif sort_mode == "average_low_high":
+
+        elif mode == SortMode.AVERAGE_LOW_HIGH:
             student_list = self.sort_by_average()
             student_list.reverse()
-        
+
+        else:
+            student_list = self.students.to_list()
+
         self.students.clear()
+
         for student in student_list:
             self.students.append(student)
-        
+
         self.search_input_callback("")
-    
+
     def menu_item_clicked_callback(self, item: QModelIndex):
         self.search_text_input.setText(item.data())
         self.search_input_callback(item.data())
@@ -359,22 +365,21 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
 
 def selection_sort_average(student_list):
     list_size = len(student_list)
-    
+
     for i in range(list_size):
         max_avg = i
 
-        for m in range(i+1, list_size):
+        for m in range(i + 1, list_size):
             current_avg = student_list[max_avg].average_grade()
             compared_avg = student_list[m].average_grade()
 
             if compared_avg > current_avg:
                 max_avg = m
-            
+
             elif current_avg == compared_avg:
                 if student_list[m].name.lower() > student_list[max_avg].name.lower():
                     max_avg = m
-        
+
         student_list[i], student_list[max_avg] = student_list[max_avg], student_list[i]
-    
+
     return student_list
-    
