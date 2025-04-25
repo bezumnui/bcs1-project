@@ -177,9 +177,9 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
         id_to_search = text[0]
 
         for student in self.students:
-            if id_to_search == str(student.id):
+            if id_to_search == student.id:
                 self.display_name_input.setText(student.name)
-                self.display_id_label.setText(str(student.id))
+                self.display_id_label.setText(student.id)
                 grades_size = len(student.grades)
                 self.current_student = student
                 for i in range(len(self.display_grades)):
