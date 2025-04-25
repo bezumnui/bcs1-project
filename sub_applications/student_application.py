@@ -163,6 +163,7 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
         self.sort_dropmenu.addItems(self.sort_modes)
         self.sort_dropmenu.setCurrentIndex(0)
         self.sort_dropmenu.textActivated.connect(self.sort_with_mode)
+        self.sort_with_mode(SortMode.ALPHABETIC)
 
         search_layout.addWidget(self.sort_dropmenu, 4, 0)
 
