@@ -7,13 +7,19 @@ from sub_applications.student_application import StudentManagerApplication
 from sub_applications.sub_application import SubApplication
 
 
+class MainMenuCombo:
+    NUMBER_CONVERTER = "Number Converter"
+    IEEE = "IEEE 754"
+    FACTORIAL = "Factorial"
+    STUDENT_MANAGER = "Student Manager"
+
+
 class WidgetGallery(QDialog):
     def __init__(self, parent=None):
         super(WidgetGallery, self).__init__(parent)
 
         self.converter_layout = QGridLayout()
         self.student_manager = QGridLayout()
-
 
         self.main_frame = QFrame()
 
@@ -22,13 +28,12 @@ class WidgetGallery(QDialog):
         self.factorial_application = FactorialApplication()
         self.student_manager_application = StudentManagerApplication()
 
-
         self.top_layout = QVBoxLayout()
         mode_combo_box = QComboBox()
-        mode_combo_box.addItems(["Number Converter", "IEEE 754", "Factorial", "Student Manager"])
+        mode_combo_box.addItems([MainMenuCombo.NUMBER_CONVERTER, MainMenuCombo.IEEE, MainMenuCombo.FACTORIAL,
+                                 MainMenuCombo.STUDENT_MANAGER])
         mode_combo_box.textActivated.connect(self.change_mode)
         self.top_layout.addWidget(mode_combo_box)
-
 
         self.ieee_754_application.register_widget(self.top_layout)
         self.bin_hex_octal_converter_application.register_widget(self.top_layout)
@@ -41,7 +46,6 @@ class WidgetGallery(QDialog):
         self.setWindowTitle(self.current_application.get_name())
         self.current_application.display()
 
-
     def resize_window(self):
         self.setFixedSize(self.baseSize())
 
@@ -53,16 +57,15 @@ class WidgetGallery(QDialog):
 
     def change_mode(self, data):
 
-        if data == "IEEE 754":
-            self.replace_application(self.ieee_754_application)
+        match data:
+            case MainMenuCombo.NUMBER_CONVERTER:
+                self.replace_application(self.bin_hex_octal_converter_application)
 
-        elif data == "Number Converter":
-            self.replace_application(self.bin_hex_octal_converter_application)
+            case MainMenuCombo.IEEE:
+                self.replace_application(self.ieee_754_application)
 
-        elif data == "Factorial":
-            self.replace_application(self.factorial_application)
+            case MainMenuCombo.FACTORIAL:
+                self.replace_application(self.factorial_application)
 
-        if data == "Student Manager":
-            self.replace_application(self.student_manager_application)
-
-
+            case MainMenuCombo.STUDENT_MANAGER:
+                self.replace_application(self.student_manager_application)
