@@ -13,6 +13,13 @@ class Student:
     def set_name(self, name: str):
         self.name = name
 
+    def average_grade(self):
+        if len(self.grades) > 0:
+            average = sum(self.grades) / len(self.grades)
+            return round(average, 2)
+        else:
+            return 0.0
+    
     def serialize(self):
         result = f"{self.name};{self.id};"
         for i in range(len(self.grades)):
