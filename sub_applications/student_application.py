@@ -364,7 +364,7 @@ def selection_sort_avg(student_list):
                 max_avg = m
             
             elif current_avg == compared_avg:
-                if student_list[m].name > student_list[max_avg].name:
+                if student_list[m].name.lower() > student_list[max_avg].name.lower():
                     max_avg = m
         
         student_list[i], student_list[max_avg] = student_list[max_avg], student_list[i]
