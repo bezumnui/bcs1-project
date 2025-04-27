@@ -1,10 +1,10 @@
-
-    from PyQt6.QtWidgets import QApplication
-from gallery import WidgetGallery  # Import the updated gallery with the new GUI
+from PyQt6.QtWidgets import QApplication
+from gallery import WidgetGallery  
 
 if __name__ == '__main__':
     app = QApplication([])
-    g = WidgetGallery()  # Initialize the new GUI
-    g.show()  # Show the window
+    g = WidgetGallery()  
+    g.show()  
 
-    app.exec()  # Start the application event loop
+    app.exec()  
+    
