@@ -6,6 +6,7 @@ class Node:
         self.value = value
         self.next: Node | None = None
 
+
 class LinkedArray:
     def __init__(self):
         self.head: Node | None = None
@@ -72,17 +73,3 @@ class LinkedArray:
         while current:
             yield current.value
             current = current.next
-
-if __name__ == '__main__':
-    l = LinkedArray()
-    l.append("1")
-    l.append("2")
-    l.append("3")
-    l.append("4")
-
-    print(l.to_list())
-    # l.clear()
-    print(l[2])
-
-
-
