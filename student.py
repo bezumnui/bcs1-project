@@ -7,13 +7,19 @@ from linked_array import LinkedArray
 @dataclasses.dataclass
 class Student:
     name: str
-    id: int
+    id: str
     grades: list[float]
-
 
     def set_name(self, name: str):
         self.name = name
 
+    def average_grade(self):
+        if len(self.grades) > 0:
+            average = sum(self.grades) / len(self.grades)
+            return round(average, 2)
+        else:
+            return 0.0
+    
     def serialize(self):
         result = f"{self.name};{self.id};"
         for i in range(len(self.grades)):
@@ -25,16 +31,20 @@ class Student:
     @staticmethod
     def deserialize(text: str):
         name, id_, grades_raw = text.split(";")
-        grades = grades_raw[:-1].split(",")
-        return Student(name, int(id_), list(map(float, grades)))
+        raw_grades = grades_raw[:-1]
+        if raw_grades:
+            grades = raw_grades.split(",")
+        else:
+            grades = []
+        return Student(name, id_, list(map(float, grades)))
 
     def __repr__(self):
         return f"Student(name: \"{self.name}\", id: {self.id}, grades: {self.grades})"
 
+
 class StudentSerializer:
     def __init__(self, filename="students.txt"):
         self.filename = filename
-
 
     def load_file(self, students: LinkedArray):
         students.clear()
@@ -43,19 +53,7 @@ class StudentSerializer:
                 students.append(Student.deserialize(line))
         return students
 
-
     def save_to_file(self, students: list[Student]):
-        # must be stored as first_name last_name;student_id;0.5,4.5,2.5;\n
         with open(self.filename, "w") as f:
             for student in students:
                 f.write(student.serialize())
-
-    # def merge_by_id(self, ):
-
-
-if __name__ == '__main__':
-    StudentSerializer().save_to_file([
-        Student("George Viznyuk", 2023, [10, 24.5, 3.5]),
-        Student("Heorhii Vizniuk", 2024, [1.22514, 24.5, 3.5]),
-    ])
-    print(StudentSerializer().load_file())
