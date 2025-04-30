@@ -25,7 +25,6 @@ class StudentsCompleter(QCompleter):
         self.max_filter = 4
 
     def update(self, students_names: Stack):
-        print(students_names.to_list())
         self.__model.setStringList(students_names.to_list()[:self.max_filter])
 
 
