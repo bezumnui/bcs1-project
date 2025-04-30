@@ -1,18 +1,18 @@
 import typing
 
+T = typing.TypeVar('T')
 
 class Node:
     def __init__(self, value=None):
         self.value = value
         self.next: Node | None = None
 
-
-class LinkedArray:
+class LinkedArray(typing.Generic[T]):
     def __init__(self):
         self.head: Node | None = None
         self.size_ = 0
 
-    def __getitem__(self, index_: int):
+    def __getitem__(self, index_: int) -> T:
         if index_ < 0 or index_ >= self.size_:
             raise IndexError("index is out of the array")
         current = self.head
@@ -23,7 +23,7 @@ class LinkedArray:
     def __len__(self):
         return self.size_
 
-    def append(self, obj_):
+    def append(self, obj_: T):
         new_node = Node(obj_)
         if not self.head:
             self.head = new_node
@@ -46,7 +46,7 @@ class LinkedArray:
             current.next = current.next.next
         self.size_ -= 1
 
-    def get_index(self, object_to_search) -> int:
+    def get_index(self, object_to_search: T) -> int:
         current = self.head
         index = 0
         while current:
@@ -56,7 +56,7 @@ class LinkedArray:
             index += 1
         return -1
 
-    def to_list(self) -> list:
+    def to_list(self) -> list[T]:
         result = []
         current = self.head
         while current:
@@ -73,3 +73,4 @@ class LinkedArray:
         while current:
             yield current.value
             current = current.next
+

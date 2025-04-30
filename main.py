@@ -1,5 +1,4 @@
-
-    from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication
 from gallery import WidgetGallery  # Import the updated gallery with the new GUI
 
 if __name__ == '__main__':
