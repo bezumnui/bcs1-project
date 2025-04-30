@@ -10,7 +10,7 @@ from sub_applications.sub_application import SubApplication
 class MainMenuCombo:
     NUMBER_CONVERTER = "Number Converter"
     IEEE = "IEEE 754"
-    FACTORIAL = "Factorial"
+    FACTORIAL = "Factorial/Fibonacci"
     STUDENT_MANAGER = "Student Manager"
 
 

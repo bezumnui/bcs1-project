@@ -1,4 +1,3 @@
-
 def float_to_ieee754(number: float) -> str:
     sign = 0
     if number < 0:
@@ -32,10 +31,16 @@ def float_to_ieee754(number: float) -> str:
     ieee754 = sign_bit + exponent_bits + m_bin
     return ieee754
 
+
 def get_factorial_recurse(number: int) -> int:
     if number == 0:
         return 1
     return number * get_factorial_recurse(number - 1)
+
+
+def fibonacci(n: int) -> int:
+    return n if n < 2 else fibonacci(n - 1) + fibonacci(n - 2)
+
 
 def is_float(raw_single: str):
     if len(raw_single) > 0:
