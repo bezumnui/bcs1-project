@@ -1,8 +1,11 @@
+from collections import deque
+
 from PyQt6.QtCore import Qt, QStringListModel, QModelIndex
 from PyQt6.QtWidgets import QWidget, QLineEdit, QGridLayout, QPushButton, QCompleter, QLabel, QVBoxLayout, \
     QHBoxLayout, QSizePolicy, QListView, QAbstractItemView, QStyle, QComboBox
 
 from linked_array import LinkedArray
+from stack import Stack
 from student import StudentSerializer, Student
 from sub_applications.add_new_student import AddNewStudentWindow
 from sub_applications.student_provider import StudentsProvider
@@ -21,8 +24,9 @@ class StudentsCompleter(QCompleter):
         self.setFilterMode(Qt.MatchFlag.MatchContains)
         self.max_filter = 4
 
-    def update(self, students_names: list[str]):
-        self.__model.setStringList(students_names[:self.max_filter])
+    def update(self, students_names: Stack):
+        print(students_names.to_list())
+        self.__model.setStringList(students_names.to_list()[:self.max_filter])
 
 
 class SortMode:
@@ -51,6 +55,7 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
     def __init__(self):
         super().__init__()
 
+        self.max_history_size = 5
         self.sort_modes = [
             SortMode.ALPHABETIC,
             SortMode.AVERAGE_HIGH_LOW,
@@ -72,6 +77,7 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
         self.search_menu: QListView | None = None
         self.search_menu_model = QStringListModel()
         self.search_text_completer = StudentsCompleter()
+        self.search_history: Stack = Stack()
         self.search_text_input: QLineEdit | None = None
         self.search_button: QPushButton | None = None
 
@@ -185,7 +191,8 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
                 filtered.append(student_string)
                 filtered_index += 1
 
-        self.search_text_completer.update(filtered)
+        self.search_text_completer.update(self.search_history)
+
         self.search_menu_model.setStringList(filtered)
 
     def sort_by_average(self):
@@ -232,6 +239,11 @@ class StudentManagerApplication(SubApplication, StudentsProvider):
                 self.display_id_label.setText(student.id)
                 grades_size = len(student.grades)
                 self.current_student = student
+                self.search_history.push(f"{student.id} {student.name}")
+
+                if len(self.search_history) > self.max_history_size:
+                    self.search_history.trunk()
+
                 for i in range(len(self.display_grades)):
                     grade = self.display_grades[i]
                     if grades_size > i:
