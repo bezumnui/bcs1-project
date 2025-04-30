@@ -6,6 +6,7 @@ from student import Student
 
 
 class StudentsProvider(abc.ABC):
+
     @abstractmethod
     def get_students(self) -> LinkedArray[Student]:
         """Returns a list of students."""
